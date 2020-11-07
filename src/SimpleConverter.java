@@ -2,6 +2,7 @@ import java.math.BigInteger;
 
 @SuppressWarnings("unused")
 public class SimpleConverter {
+    //TODO make javadoc to SimpleConverter
     private final int precision;
 
     public SimpleConverter() {

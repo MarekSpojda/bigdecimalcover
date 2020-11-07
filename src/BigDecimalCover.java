@@ -2,36 +2,91 @@ import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
 
+/**
+ * <b>BigDecimalCover</b><br>
+ * <br>
+ * <i>public class BigDecimalCover</i><br>
+ * <br>
+ * Class for math operations.
+ */
+
 @SuppressWarnings("unused")
 public class BigDecimalCover {
+    /**
+     * Value of PI with 2000 decimal places.
+     */
     public static final String PI =
             "3.14159265358979323846264338327950288419716939937510582097494459230781640628620899862803482534211706798214808651328230664709384460955058223172535940812848111745028410270193852110555964462294895493038196442881097566593344612847564823378678316527120190914564856692346034861045432664821339360726024914127372458700660631558817488152092096282925409171536436789259036001133053054882046652138414695194151160943305727036575959195309218611738193261179310511854807446237996274956735188575272489122793818301194912983367336244065664308602139494639522473719070217986094370277053921717629317675238467481846766940513200056812714526356082778577134275778960917363717872146844090122495343014654958537105079227968925892354201995611212902196086403441815981362977477130996051870721134999999837297804995105973173281609631859502445945534690830264252230825334468503526193118817101000313783875288658753320838142061717766914730359825349042875546873115956286388235378759375195778185778053217122680661300192787661119590921642019893809525720106548586327886593615338182796823030195203530185296899577362259941389124972177528347913151557485724245415069595082953311686172785588907509838175463746493931925506040092770167113900984882401285836160356370766010471018194295559619894676783744944825537977472684710404753464620804668425906949129331367702898915210475216205696602405803815019351125338243003558764024749647326391419927260426992279678235478163600934172164121992458631503028618297455570674983850549458858692699569092721079750930295532116534498720275596023648066549911988183479775356636980742654252786255181841757467289097777279380008164706001614524919217321721477235014144197356854816136115735255213347574184946843852332390739414333454776241686251898356948556209921922218427255025425688767179049460165346680498862723279178608578438382796797668145410095388378636095068006422512520511739298489608412848862694560424196528502221066118630674427862203919494504712371378696095636437191728746776465757396241389086583264599581339047802759009";
     private int precision;
 
+    /**
+     * <b>BigDecimalCover</b><br>
+     * <br>
+     * <i>public BigDecimalCover(int precision)</i><br>
+     * <br>
+     * Returns instance of BigDecimalCover and sets given precision.
+     *
+     * @param precision precision to be set.
+     */
     public BigDecimalCover(int precision) {
         this.precision = precision;
     }
 
+    /**
+     * <b>absolute</b><br>
+     * <br>
+     * <i>public String absolute(String number)</i><br>
+     * <br>
+     * Calculates absolute version of number.
+     *
+     * @param number number from which absolute version would be calculated.
+     * @return absolute version of number.
+     */
     public String absolute(String number) {
         return new BigDecimal(number).abs(new MathContext(precision))
                 .setScale(precision, RoundingMode.HALF_EVEN).toPlainString();
     }
 
-    public String add(String numberA, String numberB) {
-        return new BigDecimal(numberA).add(new BigDecimal(numberB))
-                .setScale(precision, RoundingMode.HALF_EVEN).toPlainString();
-    }
-
+    /**
+     * <b>arcCos</b><br>
+     * <br>
+     * <i>public String arcCos(String cosine)</i><br>
+     * <br>
+     * Calculates arcus cosine from given value.
+     *
+     * @param cosine cosine value.
+     * @return arcus cosine in radians.
+     */
     public String arcCos(String cosine) {
         String piBy2 = divide(BigDecimalCover.PI, "2");
         return subtract(piBy2, arcSin(cosineToSine(cosine)));
     }
 
+    /**
+     * <b>arcCtg</b><br>
+     * <br>
+     * <i>public String arcCtg(String cotangent)</i><br>
+     * <br>
+     * Calculates arcus cotangent from given value.
+     *
+     * @param cotangent cotangent value.
+     * @return arcus cotangent in radians.
+     */
     public String arcCtg(String cotangent) {
         String piBy2 = divide(BigDecimalCover.PI, "2");
         return subtract(piBy2, arcTg(cotangent));
     }
 
+    /**
+     * <b>arcSin</b><br>
+     * <br>
+     * <i>public String arcSin(String sine)</i><br>
+     * <br>
+     * Calculates arcus sine from given value.
+     *
+     * @param sine sine value.
+     * @return arcus sine in radians.
+     */
     public String arcSin(String sine) {
         BigDecimal bigDecimalSine = new BigDecimal(sine);
         BigDecimal bigDecimal1 = new BigDecimal("1");
@@ -48,6 +103,32 @@ public class BigDecimalCover {
         return arcTg(sineToTangent(sine));
     }
 
+    /**
+     * <b>add</b><br>
+     * <br>
+     * <i>public String add(String numberA, String numberB)</i><br>
+     * <br>
+     * Calculates sum of two numbers.
+     *
+     * @param numberA first number to be added.
+     * @param numberB second number to be added.
+     * @return sum of both numbers.
+     */
+    public String add(String numberA, String numberB) {
+        return new BigDecimal(numberA).add(new BigDecimal(numberB))
+                .setScale(precision, RoundingMode.HALF_EVEN).toPlainString();
+    }
+
+    /**
+     * <b>arcTg</b><br>
+     * <br>
+     * <i>public String arcTg(String tangent)</i><br>
+     * <br>
+     * Calculates arcus tangent from given value.
+     *
+     * @param tangent tangent value.
+     * @return arcus tangent in radians.
+     */
     public String arcTg(String tangent) {
         BigDecimal bigX = new BigDecimal(tangent);
         String piBy4 = divide(BigDecimalCover.PI, "4");
@@ -91,6 +172,16 @@ public class BigDecimalCover {
         return result;
     }
 
+    /**
+     * <b>cosineToCotangent</b><br>
+     * <br>
+     * <i>public String cosineToCotangent(String cosine)</i><br>
+     * <br>
+     * Converts cosine to cotangent.
+     *
+     * @param cosine cosine value.
+     * @return cotangent.
+     */
     public String cosineToCotangent(String cosine) {
         int tempPrecision = this.precision;
         this.precision = this.precision + 10;
@@ -104,6 +195,16 @@ public class BigDecimalCover {
                 .toPlainString();
     }
 
+    /**
+     * <b>cosineToSine</b><br>
+     * <br>
+     * <i>public String cosineToSine(String cosine)</i><br>
+     * <br>
+     * Converts cosine to sine.
+     *
+     * @param cosine cosine value.
+     * @return sine.
+     */
     public String cosineToSine(String cosine) {
         int tempPrecision = this.precision;
         this.precision = this.precision + 10;
@@ -116,6 +217,16 @@ public class BigDecimalCover {
                 .toPlainString();
     }
 
+    /**
+     * <b>cosineToTangent</b><br>
+     * <br>
+     * <i>public String cosineToTangent(String cosine)</i><br>
+     * <br>
+     * Converts cosine to tangent.
+     *
+     * @param cosine cosine value.
+     * @return tangent.
+     */
     public String cosineToTangent(String cosine) {
         int tempPrecision = this.precision;
         this.precision = this.precision + 10;
@@ -129,11 +240,33 @@ public class BigDecimalCover {
                 .toPlainString();
     }
 
+    /**
+     * <b>divide</b><br>
+     * <br>
+     * <i>public String divide(String numberA, String numberB)</i><br>
+     * <br>
+     * Divides numberA by numberB.
+     *
+     * @param numberA first number.
+     * @param numberB first number.
+     * @return numberA divided by numberB.
+     */
     public String divide(String numberA, String numberB) {
         return new BigDecimal(numberA)
                 .divide(new BigDecimal(numberB), precision, RoundingMode.HALF_EVEN).toPlainString();
     }
+    //TODO tangent to others, cotangent to others
 
+    /**
+     * <b>factorial</b><br>
+     * <br>
+     * <i>public String factorial(String number)</i><br>
+     * <br>
+     * Calculates factorial from number.
+     *
+     * @param number number to calculate factorial from.
+     * @return factorial of number.
+     */
     public String factorial(String number) {
         if (number.contains(".")) {
             throw new ArithmeticException("Trying to calculate factorial from decimal number");
@@ -150,15 +283,46 @@ public class BigDecimalCover {
         return result.toPlainString();
     }
 
+    /**
+     * <b>getPrecision</b><br>
+     * <br>
+     * <i>public int getPrecision()</i><br>
+     * <br>
+     * Returns current BigDecimalCover instance precision.
+     *
+     * @return current BigDecimalCover instance precision.
+     */
     public int getPrecision() {
         return precision;
     }
 
+    /**
+     * <b>multiply</b><br>
+     * <br>
+     * <i>public String multiply(String numberA, String numberB)</i><br>
+     * <br>
+     * Multiplies two numbers.
+     *
+     * @param numberA first number to be multiplied.
+     * @param numberB second number to be multiplied.
+     * @return multiplication of given numbers.
+     */
     public String multiply(String numberA, String numberB) {
         return new BigDecimal(numberA).multiply(new BigDecimal(numberB))
                 .setScale(precision, RoundingMode.HALF_EVEN).toPlainString();
     }
 
+    /**
+     * <b>power</b><br>
+     * <br>
+     * <i>public String power(String number, int power)</i><br>
+     * <br>
+     * Calculates power of number.
+     *
+     * @param number number from which power will be calculated.
+     * @param power  power to be used.
+     * @return number raised to given power.
+     */
     public String power(String number, int power) {
         if (power == 0) {
             return new BigDecimal("1").setScale(precision, RoundingMode.HALF_EVEN).toPlainString();
@@ -173,6 +337,17 @@ public class BigDecimalCover {
                 .toPlainString();
     }
 
+    /**
+     * <b>rootOfDegree</b><br>
+     * <br>
+     * <i>public String rootOfDegree(String number, int rootDegree)</i><br>
+     * <br>
+     * Calculates root of number.
+     *
+     * @param number     number from which root will be calculated.
+     * @param rootDegree root degree to be used.
+     * @return number root of given degree.
+     */
     public String rootOfDegree(String number, int rootDegree) {
         BigDecimal numberAsBigDecimal = new BigDecimal(number);
         boolean isInputNegative = numberAsBigDecimal.signum() == -1;
@@ -234,6 +409,16 @@ public class BigDecimalCover {
         return result.setScale(precision, RoundingMode.HALF_EVEN).toPlainString();
     }
 
+    /**
+     * <b>sineToCosine</b><br>
+     * <br>
+     * <i>public String sineToCosine(String sine)</i><br>
+     * <br>
+     * Converts sine to cosine.
+     *
+     * @param sine sine value.
+     * @return cosine.
+     */
     public String sineToCosine(String sine) {
         int tempPrecision = this.precision;
         this.precision = this.precision + 10;
@@ -246,6 +431,16 @@ public class BigDecimalCover {
                 .toPlainString();
     }
 
+    /**
+     * <b>sineToCotangent</b><br>
+     * <br>
+     * <i>public String sineToCotangent(String sine)</i><br>
+     * <br>
+     * Converts sine to cotangent.
+     *
+     * @param sine sine value.
+     * @return cotangent.
+     */
     public String sineToCotangent(String sine) {
         int tempPrecision = this.precision;
         this.precision = this.precision + 10;
@@ -259,6 +454,16 @@ public class BigDecimalCover {
                 .toPlainString();
     }
 
+    /**
+     * <b>sineToTangent</b><br>
+     * <br>
+     * <i>public String sineToTangent(String sine)</i><br>
+     * <br>
+     * Converts sine to tangent.
+     *
+     * @param sine sine value.
+     * @return tangent.
+     */
     public String sineToTangent(String sine) {
         int tempPrecision = this.precision;
         this.precision = this.precision + 10;
@@ -272,16 +477,48 @@ public class BigDecimalCover {
                 .toPlainString();
     }
 
+    /**
+     * <b>squareRootOf</b><br>
+     * <br>
+     * <i>public String squareRootOf(String number)</i><br>
+     * <br>
+     * Calculates square root of number.
+     *
+     * @param number number from which square root will be calculated.
+     * @return square root of number.
+     */
     public String squareRootOf(String number) {
         return new BigDecimal(number).sqrt(new MathContext(precision))
                 .setScale(precision, RoundingMode.HALF_EVEN).toPlainString();
     }
 
+    /**
+     * <b>subtract</b><br>
+     * <br>
+     * <i>public String subtract(String numberA, String numberB)</i><br>
+     * <br>
+     * Subtracts numberB from numberA.
+     *
+     * @param numberA number from which second number will be subtracted.
+     * @param numberB number which will be subtracted from first number.
+     * @return result of subtracting numberB from numberA.
+     */
     public String subtract(String numberA, String numberB) {
         return new BigDecimal(numberA).subtract(new BigDecimal(numberB))
                 .setScale(precision, RoundingMode.HALF_EVEN).toPlainString();
     }
 
+    /**
+     * <b>roundNumberToGivenPrecision</b><br>
+     * <br>
+     * <i>public String roundNumberToGivenPrecision(String number, int precision)</i><br>
+     * <br>
+     * Rounds number to given precision which may differ from precision of this BigDecimalCover instance.
+     *
+     * @param number    number to be rounded.
+     * @param precision precision to be used in rounding.
+     * @return number rounded to given precision.
+     */
     public String roundNumberToGivenPrecision(String number, int precision) {
         return new BigDecimal(number).setScale(precision, RoundingMode.HALF_EVEN).toPlainString();
     }
