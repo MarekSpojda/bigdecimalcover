@@ -1,19 +1,10 @@
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInfo;
-import org.junit.jupiter.api.TestReporter;
-import org.junit.jupiter.api.extension.ExtensionContext;
-import org.junit.jupiter.api.extension.TestWatcher;
-import org.junit.platform.engine.TestExecutionResult;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@ExtendWith(FailedTestWatcher.class)
 public class BigDecimalCoverTest {
-    @AfterEach
-    void after(TestInfo testInfo) {
-        RunAllTests.logTestInfo(testInfo.toString());
-    }
-
     @Test
     public void addTest() {
         BigDecimalCover bigDecimalCover = new BigDecimalCover(3);
