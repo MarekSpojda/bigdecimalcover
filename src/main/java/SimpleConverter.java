@@ -65,16 +65,17 @@ public class SimpleConverter {
     }
 
     public String decToBin(String dec) {
-        int intDec = Integer.parseInt(dec);
+        BigInteger bigIntDec = new BigInteger(dec);
+        BigInteger temp;
         StringBuilder result = new StringBuilder();
         while (true) {
-            int temp = intDec % 2;
+            temp = bigIntDec.remainder(new BigInteger("2"));
             String modifier = "" + temp;
             result.insert(0, "" + modifier);
-            if (intDec < 2) {
+            if (bigIntDec.compareTo(new BigInteger("2")) < 0) {
                 break;
             }
-            intDec = intDec / 2;
+            bigIntDec = bigIntDec.divide(new BigInteger("2"));
         }
         return result.toString();
     }
