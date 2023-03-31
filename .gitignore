@@ -1,4 +1,6 @@
-.idea/
-out/
+.idea
+out
 *.iml
 junitError.log
+htmlReport
+target

@@ -1,5 +1,4 @@
 import java.math.BigDecimal;
-import java.math.MathContext;
 import java.math.RoundingMode;
 
 /**
@@ -24,7 +23,7 @@ public class BigDecimalCover {
      * <br>
      * <i>public BigDecimalCover(int precision)</i><br>
      * <br>
-     * Returns instance of BigDecimalCover and sets given precision.
+     * Returns instance of BigDecimalCover and sets given precision. Precision less than or equal to 2000 is preferred.
      *
      * @param precision precision to be set.
      */
@@ -43,8 +42,7 @@ public class BigDecimalCover {
      * @return absolute version of number.
      */
     public String absolute(String number) {
-        return new BigDecimal(number).abs(new MathContext(this.precision))
-                .setScale(this.precision, RoundingMode.HALF_EVEN).toPlainString();
+        return new BigDecimal(number).abs().setScale(this.precision, RoundingMode.HALF_EVEN).toPlainString();
     }
 
     /**
@@ -147,7 +145,7 @@ public class BigDecimalCover {
             for (int i = 0; i < (this.precision + 10); i++) {
                 int factor = 2 * i + 1;
                 String numerator = power("-1", i);
-                String denominator = "" + factor;
+                String denominator = String.valueOf(factor);
                 String fraction = divide(numerator, denominator);
                 String xPowered = power(tangent, factor);
                 result = add(result, multiply(fraction, xPowered));
@@ -165,7 +163,7 @@ public class BigDecimalCover {
                 String numerator = power("-1", i + 1);
                 int factor = 2 * i + 1;
                 String xPowered = power(tangent, factor);
-                String denominator = multiply("" + factor, xPowered);
+                String denominator = multiply(String.valueOf(factor), xPowered);
                 String fraction = divide(numerator, denominator);
                 result = add(result, fraction);
             }
@@ -203,6 +201,7 @@ public class BigDecimalCover {
      * @return cotangent.
      */
     public String cosineToCotangent(String cosine) {
+        //noinspection DuplicatedCode
         int tempPrecision = this.precision;
         this.precision = this.precision + 10;
         String cosine2 = power(cosine, 2);
@@ -226,6 +225,7 @@ public class BigDecimalCover {
      * @return sine.
      */
     public String cosineToSine(String cosine) {
+        //noinspection DuplicatedCode
         int tempPrecision = this.precision;
         this.precision = this.precision + 10;
         String cosine2 = power(cosine, 2);
@@ -248,6 +248,7 @@ public class BigDecimalCover {
      * @return tangent.
      */
     public String cosineToTangent(String cosine) {
+        //noinspection DuplicatedCode
         int tempPrecision = this.precision;
         this.precision = this.precision + 10;
         String cosine2 = power(cosine, 2);
@@ -296,6 +297,29 @@ public class BigDecimalCover {
         int tempPrecision = this.precision;
         this.precision = this.precision + 10;
         String result = divide("1", cotangent);
+        this.precision = tempPrecision;
+
+        return new BigDecimal(result).setScale(this.precision, RoundingMode.HALF_EVEN)
+                .toPlainString();
+    }
+
+    /**
+     * <b>cotangentToCosine</b><br>
+     * <br>
+     * <i>public String cotangentToCosine(String cotangent)</i><br>
+     * <br>
+     * Converts cotangent to cosine.
+     *
+     * @param cotangent cotangent value.
+     * @return cosine.
+     */
+    public String cotangentToCosine(String cotangent) {
+        //noinspection DuplicatedCode
+        int tempPrecision = this.precision;
+        this.precision = this.precision + 10;
+        String cotangent2 = power(cotangent, 2);
+        String factor = divide(cotangent2, add(cotangent2, "1"));
+        String result = squareRootOf(factor);
         this.precision = tempPrecision;
 
         return new BigDecimal(result).setScale(this.precision, RoundingMode.HALF_EVEN)
@@ -442,21 +466,22 @@ public class BigDecimalCover {
         }
 
         BigDecimal result = numberAsBigDecimal;
+        //loop below will calculate base result value
         while (result.pow(rootDegree).compareTo(numberAsBigDecimal) > 0) {
             result =
                     result.divide(new BigDecimal("2"), this.precision + 10, RoundingMode.HALF_EVEN);
         }
 
+        //initial value of upperBound comes from multiplying result by 2 because after previous while loop we know
+        // that result of that multiplication would be greater that final result
         BigDecimal lowerBound = result,
                 upperBound = result.multiply(new BigDecimal("2")),
-                center, leftCenter, rightCenter;
-        while (upperBound.subtract(lowerBound).compareTo(new BigDecimal("1")) > 0) {
-            center = upperBound.add(lowerBound)
-                    .divide(new BigDecimal("2"), this.precision + 10, RoundingMode.HALF_EVEN);
-            leftCenter = lowerBound.add(center)
-                    .divide(new BigDecimal("2"), this.precision + 10, RoundingMode.HALF_EVEN);
-            rightCenter = upperBound.add(center)
-                    .divide(new BigDecimal("2"), this.precision + 10, RoundingMode.HALF_EVEN);
+                center, leftCenter, rightCenter, singleBigDecimal = new BigDecimal("1"), twoBigDecimal = new BigDecimal(
+                "2");
+        while (upperBound.subtract(lowerBound).compareTo(singleBigDecimal) > 0) {
+            center = upperBound.add(lowerBound).divide(twoBigDecimal, RoundingMode.HALF_EVEN);
+            leftCenter = lowerBound.add(center).divide(twoBigDecimal, RoundingMode.HALF_EVEN);
+            rightCenter = upperBound.add(center).divide(twoBigDecimal, RoundingMode.HALF_EVEN);
             if (leftCenter.pow(rootDegree).subtract(numberAsBigDecimal).abs()
                     .compareTo(rightCenter.pow(rootDegree).subtract(numberAsBigDecimal).abs()) <
                     1) {
@@ -465,29 +490,32 @@ public class BigDecimalCover {
                 lowerBound = center;
             }
         }
-        result = lowerBound.subtract(lowerBound.remainder(new BigDecimal("1")));
+
+        //calculating total part of lower bound
+        result = lowerBound.subtract(lowerBound.remainder(singleBigDecimal));
 
         BigDecimal modifier;
         int modifierFiller = 0;
         BigDecimal delta = new BigDecimal("0." + "0".repeat(this.precision + 9) + "1");
 
+        //precise value adjustment
         while (true) {
             modifier = new BigDecimal("0." + "0".repeat(modifierFiller) + "1");
             while (result.add(modifier).pow(rootDegree).compareTo(numberAsBigDecimal) < 1) {
                 result = result.add(modifier);
             }
-            if (result.pow(rootDegree).compareTo(numberAsBigDecimal) == 0 ||
-                    result.pow(rootDegree).subtract(result.add(modifier).pow(rootDegree)).abs()
-                            .compareTo(delta)
-                            < 1) {
+            BigDecimal resultPoweredToRootDegree = result.pow(rootDegree);
+            if (resultPoweredToRootDegree.compareTo(numberAsBigDecimal) == 0 || resultPoweredToRootDegree.subtract(
+                            result.add(modifier).pow(rootDegree)).abs()
+                    .compareTo(delta)
+                    < 1) {
                 break;
             }
             modifierFiller++;
         }
 
         if (isRootDegreeNegative) {
-            return new BigDecimal("1").divide(result, this.precision, RoundingMode.HALF_EVEN)
-                    .toPlainString();
+            return singleBigDecimal.divide(result, this.precision, RoundingMode.HALF_EVEN).toPlainString();
         }
         return result.setScale(this.precision, RoundingMode.HALF_EVEN).toPlainString();
     }
@@ -519,6 +547,7 @@ public class BigDecimalCover {
      * @return cosine.
      */
     public String sineToCosine(String sine) {
+        //noinspection DuplicatedCode
         int tempPrecision = this.precision;
         this.precision = this.precision + 10;
         String sine2 = power(sine, 2);
@@ -541,6 +570,7 @@ public class BigDecimalCover {
      * @return cotangent.
      */
     public String sineToCotangent(String sine) {
+        //noinspection DuplicatedCode
         int tempPrecision = this.precision;
         this.precision = this.precision + 10;
         String sine2 = power(sine, 2);
@@ -564,6 +594,7 @@ public class BigDecimalCover {
      * @return tangent.
      */
     public String sineToTangent(String sine) {
+        //noinspection DuplicatedCode
         int tempPrecision = this.precision;
         this.precision = this.precision + 10;
         String sine2 = power(sine, 2);
@@ -587,11 +618,8 @@ public class BigDecimalCover {
      * @return square root of number.
      */
     public String squareRootOf(String number) {
-        return new BigDecimal(number).sqrt(new MathContext(this.precision))
-                .setScale(this.precision, RoundingMode.HALF_EVEN).toPlainString();
+        return rootOfDegree(number,2);
     }
-
-    //TODO cotangent to cosine
 
     /**
      * <b>subtract</b><br>
@@ -662,6 +690,7 @@ public class BigDecimalCover {
      * @return sine.
      */
     public String tangentToSine(String tangent) {
+        //noinspection DuplicatedCode
         int tempPrecision = this.precision;
         this.precision = this.precision + 10;
         String tangent2 = power(tangent, 2);
